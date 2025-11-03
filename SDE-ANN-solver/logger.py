@@ -4,6 +4,8 @@ import os
 from datetime import datetime
 from typing import Optional
 
+from main import model
+
 
 def get_logger(
     name: Optional[str] = None,
@@ -68,4 +70,4 @@ def get_logger(
     return logger
 
 
-logger = get_logger()
+logger = get_logger(log_dir=".", to_file=True, overwrite=False)

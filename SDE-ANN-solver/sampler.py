@@ -22,7 +22,7 @@ def get_batch_sampler(time: float, n_points: int, sigma: float):
             a batch of samples with shape [batch_size, n_points + 1].
     """
     dt = time / (n_points - 1)
-    def sample_batch(batch_size: int, random: bool = True):
+    def sample_batch(batch_size: int, random: bool = True, stack_with_time: bool = True):
         """
         Generates an input batch for the PINN.
 
@@ -44,7 +44,8 @@ def get_batch_sampler(time: float, n_points: int, sigma: float):
         if sigma < 0.001:  # For sanity check only
             dw = sigma * dw
         w_samples = np.cumsum(dw, axis=1)
-
+        if not stack_with_time:
+            return tf.convert_to_tensor(w_samples, dtype=tf.float32)
         # Generate time samples
         if random:
             t = np.random.rand(batch_size, 1) * time  # losowy czas w [0,T]
