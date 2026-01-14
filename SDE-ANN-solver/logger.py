@@ -4,8 +4,6 @@ import os
 from datetime import datetime
 from typing import Optional
 
-from main import model
-
 
 def get_logger(
     name: Optional[str] = None,

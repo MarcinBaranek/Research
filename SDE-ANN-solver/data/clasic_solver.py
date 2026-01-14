@@ -1,5 +1,15 @@
 import tensorflow as tf
-from constants import raw_a_function, X_0, sigma
+
+dtype = tf.float64
+sigma = tf.constant(0.61, dtype=dtype) # > 0
+theta = tf.constant(5, dtype=dtype) # > 0
+mu = tf.constant(0.4,dtype=dtype)
+X_0 = tf.constant(-0.3,dtype=dtype)
+
+
+@tf.function
+def raw_a_function(x: tf.Tensor, t: tf.Tensor) -> tf.Tensor:
+    return theta * (mu - x)
 
 
 @tf.function(jit_compile=True)
@@ -40,9 +50,9 @@ def euler_solver(t: tf.Tensor, w_samples: tf.Tensor) -> tuple[tf.Tensor]:
     X = tf.scan(
         fn=lambda prev, inp: step(prev, inp),
         elems=(t_seq, dt_seq, dW_seq),
-        initializer=tf.ones((batch_size,)) * tf.constant(X_0),
+        initializer=tf.ones((batch_size,), dtype=dtype) * X_0,
     )
 
     # Add initial condition at t=0
-    X = tf.concat([tf.ones((1, batch_size)) * tf.constant(X_0), X], axis=0)
+    X = tf.concat([tf.ones((1, batch_size), dtype=dtype) * tf.constant(X_0), X], axis=0)
     return tf.transpose(X, [1, 0])  # [batch_size, n]

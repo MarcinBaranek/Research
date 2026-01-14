@@ -9,19 +9,20 @@ In words:
     - sigma is the volatility coefficient,
     - W_t is a standard Wiener process (Brownian motion).
 """
-
-import keras
 import tensorflow as tf
 
 
-sigma = 0.3 # > 0
-theta = 1.1 # > 0
-mu = -0.
+sigma = 0.61 # > 0
+theta = 5 # > 0
+mu = 0.4
 T = 1.
-N = 16
+N = 2**10
 
-X_0 = -3.
-
+X_0 = -0.3
+LAM = 5.
+MAX_JUNMPS = 10
+DW_AND_DL = False
+DL = True
 
 @tf.function
 def raw_a_function(x: tf.Tensor, t: tf.Tensor) -> tf.Tensor:

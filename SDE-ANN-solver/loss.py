@@ -44,7 +44,7 @@ def get_loss_function(
         # Part 1: Compute time derivative
         with tf.GradientTape() as tape:
             tape.watch(x)
-            y = model(x)  # [batch_size, output_dim]
+            y = model(x, training=True)  # [batch_size, output_dim]
         dy_dx = tape.gradient(y, x)
         dy_dt = dy_dx[..., 0]  # [batch_size, output_dim]
 

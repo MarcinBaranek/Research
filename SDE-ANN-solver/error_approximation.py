@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import numpy as np
 import tensorflow as tf
 import keras
-from clasic_solver import euler_solver
+from data.clasic_solver import euler_solver
 from sampler import get_batch_sampler
 from logger import logger
 

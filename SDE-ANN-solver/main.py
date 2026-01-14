@@ -7,11 +7,15 @@ from model import Network
 from constants import sigma, T, X_0, dX_0, a_function
 from loss import get_loss_function
 from sampler import get_batch_sampler
-from utils import log_training_loss, ModelContext, plot_result
+from utils import ModelContext
 from error_approximation import Constants, ErrorApproximation
 
 
-for N in [4, 8, 16, 32, 64, 128, 256, 512, 2**10, 2**11, 2**12, 2**13, 2**14, 2**15, 2**16, 2**17]:
+for N in [
+    # 4, 8, 16, 32, 64, 128, 256, 512, 2**10,
+    #       2**11,
+    # 2**12, 2**13, 2**14, 2**15, 2**16, 2**17
+          ]:
     logger.info(f"N={N}")
     batch_size = 64
     learning_rate = 1e-4
@@ -21,7 +25,7 @@ for N in [4, 8, 16, 32, 64, 128, 256, 512, 2**10, 2**11, 2**12, 2**13, 2**14, 2*
     log_every = 10_00
     plot_every = 10_00
 
-    model = Network(N, X_0, dX_0)
+    model = Network(N, X_0, dX_0, sigma, T)
     loss_function = get_loss_function(T, a_function)
     sample_batch = get_batch_sampler(T, N, sigma)
 
@@ -47,4 +51,4 @@ for N in [4, 8, 16, 32, 64, 128, 256, 512, 2**10, 2**11, 2**12, 2**13, 2**14, 2*
         #     plot_result(context, n_plots=4)
     logger.info(f"Training finished {N}")
     error_calculator = ErrorApproximation(model, const)
-    error_calculator.perform_error_approximation(10, 10_00)
+    error_calculator.perform_error_approximation(10, 10_000)

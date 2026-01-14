@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dataclasses import dataclass
 from constants import a_function, sigma, T, N
-from clasic_solver import euler_solver
+from data.clasic_solver import euler_solver
 
 
 @dataclass(slots=True)
