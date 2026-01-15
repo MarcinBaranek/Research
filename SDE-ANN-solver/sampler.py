@@ -1,9 +1,8 @@
 # coding=utf-8
 import tensorflow as tf
 import numpy as np
-from constants import LAM, DW_AND_DL, MAX_JUNMPS, DL
 
-def get_batch_sampler(time: float, n_points: int, sigma: float):
+def get_batch_sampler(time: float, n_points: int, sigma: float, lam: float = 5., DL: bool = False, DW_AND_DL: bool = False):
     """Returns a function that generates input batches for a PINN (Physics-Informed Neural Network).
 
     Args:
@@ -19,6 +18,7 @@ def get_batch_sampler(time: float, n_points: int, sigma: float):
             A function `sample_batch(batch_size: int, random: bool = True)` that generates
             a batch of samples with shape [batch_size, n_points + 1].
     """
+    MAX_JUNMPS = 20
     dt = time / (n_points - 1)
     def sample_batch(batch_size: int, random: bool = True, stack_with_time: bool = True):
         """
@@ -39,7 +39,7 @@ def get_batch_sampler(time: float, n_points: int, sigma: float):
         """
         # Generate Wiener trajectories
         if DL:
-            Nj = np.random.poisson(LAM * dt, size=(batch_size, n_points))
+            Nj = np.random.poisson(lam * dt, size=(batch_size, n_points))
             jump_sizes = np.ones((batch_size, n_points, MAX_JUNMPS))
             mask = np.arange(MAX_JUNMPS) < Nj[..., None]
             dL = np.sum(jump_sizes * mask, axis=-1)
@@ -47,7 +47,7 @@ def get_batch_sampler(time: float, n_points: int, sigma: float):
         else:
             dw = np.random.randn(batch_size, n_points) * np.sqrt(dt)  # przyrosty W
         if DW_AND_DL:
-            Nj = np.random.poisson(LAM * dt, size=(batch_size, n_points))
+            Nj = np.random.poisson(lam * dt, size=(batch_size, n_points))
             jump_sizes = np.random.uniform(
                 low=-1,
                 high=1,

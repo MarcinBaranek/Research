@@ -52,11 +52,8 @@ class Evaluator:
             with tf.GradientTape() as tape:
                 tape.watch(x_input_tf)
                 y = model.call(x_input_tf, training=True)  # [N,1]
-
-            dy_dt = tape.gradient(y, x_input_tf)[..., 0]
             w_tensor = tf.convert_to_tensor(W[0, :].numpy().reshape(-1, 1),
                                             dtype=tf.float32)  # [N,1]
-            expected_drift = a_function(y, w_tensor, 0)
             y = y + sigma * w_tensor
             y = np.reshape(y.numpy(), (-1))
             l2_err = (y - self.exact[offset, :].numpy()) ** 2
